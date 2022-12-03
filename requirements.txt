@@ -1,0 +1,11 @@
+keras
+Keras-Applications
+keras-vggface
+matplotlib
+numpy
+opencv-python-headless
+requests
+scikit-learn
+scipy
+tensorflow
+tensorflow-gpu
