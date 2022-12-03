@@ -9,3 +9,6 @@ scikit-learn
 scipy
 tensorflow
 tensorflow-gpu
+flask
+flask_restful
+werkzeug
