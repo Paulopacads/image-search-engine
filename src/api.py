@@ -2,9 +2,18 @@ import os
 from flask import Flask, render_template, send_from_directory
 from flask_restful import Resource, Api, reqparse
 import werkzeug
+import binascii
 
 app = Flask(__name__)
 api = Api(app)
+app.config['IMAGE_EXTS'] = [".png", ".jpg", ".jpeg", ".gif", ".tiff"]
+app.config['DATA_DIR'] = "static/data"
+
+def encode(x):
+    return binascii.hexlify(x.encode('utf-8')).decode()
+
+def decode(x):
+    return binascii.unhexlify(x.encode('utf-8')).decode()
 
 @app.route('/')
 def index():
@@ -13,6 +22,22 @@ def index():
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+# @app.route('/static/<path:filepath>')
+# def get_file(filepath):
+#     dir, filename = os.path.split(filepath)
+#     return send_from_directory(os.path.join(app.root_path, "static", dir), filename, as_attachment=False)
+
+@app.route('/gallery')
+def gallery():
+    root_dir = 'static/data'
+    images = []
+    for root, dirs, files in os.walk(root_dir):
+        print(root)
+        for file in files:
+            if any(file.endswith(ext) for ext in app.config['IMAGE_EXTS']):
+                images.append(os.path.join(root, file))
+    return render_template('search.html', paths=images)
 
 class HelloWorld(Resource):
     def get(self):

@@ -1,0 +1,39 @@
+body {
+    background-color: #36393e;
+    font-family: "Fira Sans Light", sans-serif;
+    color: #fafcff;
+}
+
+nav {
+    background-color: #282b30;
+}
+
+div {
+    margin: 10px;
+}
+  
+* {
+    box-sizing: border-box;
+}
+  
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+  
+#top {
+    border-radius: 10px 20px;
+    border: 5px solid #424549;
+}
+  
+#close {
+    border-radius: 5px 10px;
+    padding: 5px;
+    background-color: #1e212488;
+    position: fixed;
+    top: 102%;
+    left: 50%;
+    transform: translate(-102%, -50%);
+}

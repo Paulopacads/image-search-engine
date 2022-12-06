@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>{% block title %} DLIM search ! {% endblock %}</h1>
+
+    <div class="overlay"><img id="top" hidden=True>
+        <span id="close" hidden=True onclick="do_close()"><b><u>CLOSE(X)</u></b></span>
+    </div>
+
+    <div class="cx">
+        {% for path in paths %}
+        <img src="{{ path }}" height=200 width=200 onclick="clicked_img(this)" >
+        {% endfor %}
+    </div>
+{% endblock %}
