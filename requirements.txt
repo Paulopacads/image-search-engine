@@ -12,3 +12,4 @@ tensorflow-gpu
 flask
 flask_restful
 werkzeug
+wget
