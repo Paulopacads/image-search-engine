@@ -2,4 +2,11 @@
 
 {% block content %}
     <h1>{% block title %} Welcome to our DLIM Project ! {% endblock %}</h1>
+    <div class="search-container">
+        <form method="POST" action="/gallery" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <br><input type="text" placeholder="Text search" name="text"><br>
+            <input type="number" placeholder="Max results" name="maxRes"><button type="submit">Search</button>
+        </form>
+    </div>
 {% endblock %}
