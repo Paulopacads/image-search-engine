@@ -1,6 +1,8 @@
 # tcejorp MILD (DLIM project)
 
-Creation d'un moteur de recherche d'images.
+![Logo de `tcejorp MILD`](src/static/DLIMProjectLogo.png)
+
+Création d'un moteur de recherche d'images.
 
 ## Membres de l'équipe
 
