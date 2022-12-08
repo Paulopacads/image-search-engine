@@ -1,8 +1,12 @@
-# tcejorp MILD (DLIM project)
-
 ![Logo de `tcejorp MILD`](src/static/DLIMProjectLogo.png)
 
+# tcejorp MILD (DLIM project)
+
 Création d'un moteur de recherche d'images.
+
+Le dataset utilisé est le suivant : https://lear.inrialpes.fr/~jegou/data.php
+- ftp://ftp.inrialpes.fr/pub/lear/douze/data/jpg1.tar.gz
+- ftp://ftp.inrialpes.fr/pub/lear/douze/data/jpg2.tar.gz
 
 ## Membres de l'équipe
 
@@ -27,7 +31,7 @@ Equipe `kcab si MILD` :
 
 ## Installation et lancement de l'API
 
-(OPTIONEL) Placez vous dans un environnement virtuel :
+(OPTIONNEL) Placez vous dans un environnement virtuel :
 ```sh
 python -m venv dlim
 . ./dlim/bin/activate
