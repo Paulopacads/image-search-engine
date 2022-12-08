@@ -14,9 +14,9 @@ os.makedirs(data)
 print('- Downloading first data pack')
 wget.download(URL1, data + "file.tar.gz")
 
-print('\n- Extracting data pack into jpg1')
+print('\n- Extracting data pack')
 file = tarfile.open(data + "file.tar.gz")
-file.extractall(data + "jpg1")
+file.extractall(data)
 file.close()
 
 print('- Removing data pack\n')
@@ -25,9 +25,9 @@ os.remove(data + "file.tar.gz")
 print('- Downloading second data pack')
 wget.download(URL2, data + "file.tar.gz")
 
-print('\n- Extracting data pack into jpg2')
+print('\n- Extracting data pack')
 file = tarfile.open(data + "file.tar.gz")
-file.extractall(data + "jpg2")
+file.extractall(data)
 file.close()
 
 print('- Removing data pack')
