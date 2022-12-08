@@ -30,6 +30,22 @@ def favicon():
 
 @app.route('/gallery')
 def gallery():
+    parser = reqparse.RequestParser()
+
+    parser.add_argument('searchText', required=False, location='form')
+    parser.add_argument('searchFile', required=False, type=werkzeug.datastructures.FileStorage, location='files')
+    parser.add_argument('maxResults', required=False, location='parameter')
+    args = parser.parse_args()
+
+    print(args)
+
+    maxResults = 0 if args['maxResults'] is None else args[maxResults]
+
+    if (args['searchFile'] is not None):
+        image = args['searchFile']
+        image.save('tmp.jpg')
+    # TODO: Search for images
+
     root_dir = 'static/data'
     images = []
     for root, dirs, files in os.walk(root_dir):
@@ -37,6 +53,8 @@ def gallery():
         for file in files:
             if any(file.endswith(ext) for ext in app.config['IMAGE_EXTS']):
                 images.append(os.path.join(root, file))
+                if (len(images) >= maxResults):
+                    return render_template('search.html', paths=images)
     return render_template('search.html', paths=images)
 
 class HelloWorld(Resource):

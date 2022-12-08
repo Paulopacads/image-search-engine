@@ -1,11 +1,11 @@
 body {
-    background-color: #36393e;
+    background: #36393e;
     font-family: "Fira Sans Light", sans-serif;
     color: #fafcff;
 }
 
 nav {
-    background-color: #282b30;
+    background: #282b30;
 }
 
 div {
@@ -29,11 +29,62 @@ div {
 }
   
 #close {
-    border-radius: 5px 10px;
-    padding: 5px;
-    background-color: #1e212488;
+    background: #36393e;
+    font-family: "Fira Code Light", monospace;
+    color: #fafcff;
+    outline: none;
+    border: none;
     position: fixed;
     top: 102%;
     left: 50%;
     transform: translate(-102%, -50%);
+    padding: 6px 10px;
+    font-size: 17px;
+    border-radius: 45px;
+    box-shadow: -5px -5px 7px #1e212488,
+                5px 5px 7px #424549;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+}
+
+.search-container {
+    padding: 10px;
+    border-radius: 20px;
+}
+  
+.search-container input[type=text] {
+    color: #fafcff;
+    background: #36393e;
+    outline: none;
+    border: none;
+    padding: 6px 10px;
+    font-size: 17px;
+    border-radius: 45px;
+    box-shadow: -5px -5px 7px #1e212488,
+                5px 5px 7px #424549;
+    transition: all 0.3s ease 0s;
+}
+  
+.search-container input[type=text]:hover {
+    color: #4086f4;
+    box-shadow: none;
+}
+  
+.search-container button {
+    color: #fafcff;
+    background: #36393e;
+    outline: none;
+    border: none;
+    padding: 6px 10px;
+    font-size: 17px;
+    border-radius: 45px;
+    box-shadow: -5px -5px 7px #1e212488,
+                5px 5px 7px #424549;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+}
+  
+.search-container button:hover {
+    color: #4086f4;
+    box-shadow: none;
 }
