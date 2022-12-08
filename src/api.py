@@ -27,17 +27,21 @@ def favicon():
 
 @app.route('/gallery', methods=['GET', 'POST'])
 def gallery():
-    if 'file' in request.files and request.files['file'].filename != '':
+    file_specified = 'file' in request.files and request.files['file'].filename != ''
+    max_specified = 'maxRes' in request.form and request.form['maxRes'] != ''
+    text_specified = 'text' in request.form and request.form['text'] != ''
+
+    if file_specified:
         image = request.files['file']
         print(image)
         image.save('tmp.jpg')
 
     maxResults = 50
-    if 'maxRes' in request.form and request.form['maxRes'] != '':
+    if max_specified:
         maxResults = int(request.form['maxRes'])
 
     text = None
-    if 'text' in request.form and request.form['text'] != '':
+    if text_specified:
         text = request.form['text']
 
     cbir_images = None
@@ -84,7 +88,7 @@ class Search(Resource):
             print(image)
             image.save('tmp.jpg')
 
-        maxResults = 50
+        maxResults = None
         if args['maxRes'] is not None:
             maxResults = int(args['maxRes'])
 
@@ -97,8 +101,8 @@ class Search(Resource):
         if args['file'] is not None:
             cbir_images = search_image.run('tmp.jpg', maxResults)
             
-            # if (args['file'] is not None):
-            #     return {'message': 'will search with saved image and query: ' + args['file']}, 200
+            # if (args['text'] is not None):
+            #     return {'message': 'will search with saved image and query: ' + args['text']}, 200
 
             for file in cbir_images:
                 images.append(request.url_root + os.path.join(root_dir, file))
@@ -110,7 +114,7 @@ class Search(Resource):
         for root, dirs, files in os.walk(root_dir):
             for file in files:
                 if any(file.endswith(ext) for ext in app.config['IMAGE_EXTS']):
-                    if (len(images) >= maxResults):
+                    if (maxResults is not None and len(images) >= maxResults):
                         return {'images': images}, 200
                     images.append(request.url_root + os.path.join(root, file))
         return {'images': images}, 200

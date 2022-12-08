@@ -81,6 +81,9 @@ def get_closest_images(query_image, df_image, reduced_features, nb_closest):
     similarity_scores = np.array(similarity_scores)
     sorted_indices = np.argsort(similarity_scores)[::-1]
 
+    if nb_closest is None or nb_closest > len(df_image):
+        nb_closest = len(df_image)
+
     # Get the top nb_closest most similar images
     most_similar_images = []
     for i in range(nb_closest):
@@ -89,7 +92,7 @@ def get_closest_images(query_image, df_image, reduced_features, nb_closest):
 
     return most_similar_images
 
-def run(query_image, nb_closest=50):
+def run(query_image, nb_closest):
     closest_images = get_closest_images(query_image, df_image, reduced_features, nb_closest)
     return closest_images
 
