@@ -25,14 +25,9 @@ def index():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-# @app.route('/static/<path:filepath>')
-# def get_file(filepath):
-#     dir, filename = os.path.split(filepath)
-#     return send_from_directory(os.path.join(app.root_path, "static", dir), filename, as_attachment=False)
-
 @app.route('/gallery', methods=['GET', 'POST'])
 def gallery():
-    if 'file' in request.files:
+    if 'file' in request.files and request.files['file'].filename != '':
         image = request.files['file']
         print(image)
         image.save('tmp.jpg')
@@ -42,11 +37,11 @@ def gallery():
         maxResults = int(request.form['maxRes'])
 
     text = None
-    if 'text' in request.form:
+    if 'text' in request.form and request.form['text'] != '':
         text = request.form['text']
 
     cbir_images = None
-    if 'file' in request.files:
+    if 'file' in request.files and request.files['file'].filename != '':
         cbir_images = search_image.run('tmp.jpg', maxResults)
 
     root_dir = 'static/data/jpg'
@@ -78,24 +73,47 @@ class HelloWorld(Resource):
 class Search(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-
-        parser.add_argument('image', required=False, type=werkzeug.datastructures.FileStorage, location='files')
-        parser.add_argument('query', required=False, location='form')
+        
+        parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
+        parser.add_argument('maxRes', type=int, location='form')
+        parser.add_argument('text', type=str, location='form')
         args = parser.parse_args()
-        
-        if (args['image'] is not None):
-            image = args['image']
-            image.save('tmp.jpg')
-            
-            if (args['query'] is not None):
-                return {'message': 'will search with saved image and query: ' + args['query']}, 200
 
-            return {'message': 'will search with image'}, 200
+        if args['file'] is not None:
+            image = args['file']
+            print(image)
+            image.save('tmp.jpg')
+
+        maxResults = 50
+        if args['maxRes'] is not None:
+            maxResults = int(args['maxRes'])
+
+        text = None
+        if args['text'] is not None:
+            text = args['text']
+
+        root_dir = 'static/data/jpg'
+        images = []
+        if args['file'] is not None:
+            cbir_images = search_image.run('tmp.jpg', maxResults)
+            
+            # if (args['file'] is not None):
+            #     return {'message': 'will search with saved image and query: ' + args['file']}, 200
+
+            for file in cbir_images:
+                images.append(request.url_root + os.path.join(root_dir, file))
+            return {'images': images}, 200
         
-        if (args['query'] is not None):
-            return {'message': 'will search with query: ' + args['query']}, 200
-        
-        return {'message': 'will search anything'}, 200
+        # if (args['text'] is not None):
+        #     return {'message': 'will search with query: ' + args['text']}, 200
+
+        for root, dirs, files in os.walk(root_dir):
+            for file in files:
+                if any(file.endswith(ext) for ext in app.config['IMAGE_EXTS']):
+                    if (len(images) >= maxResults):
+                        return {'images': images}, 200
+                    images.append(request.url_root + os.path.join(root, file))
+        return {'images': images}, 200
     
 api.add_resource(HelloWorld, '/hello-world')
 api.add_resource(Search, '/search')
