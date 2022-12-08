@@ -7,6 +7,10 @@ from torchvision import models
 import torchvision.transforms as transforms
 from sklearn.decomposition import PCA
 
+print("Loading the model...")
+pca = PCA(n_components=128)
+df_image = pd.read_csv("static/data/features_densenet_test.csv")
+
 def reduce_features(features):
     # Load the features from the CSV file into a Pandas DataFrame
     df = pd.read_csv("static/data/features_densenet_test.csv")
@@ -19,9 +23,11 @@ def reduce_features(features):
         image_features.append(features)
 
     # Perform dimensionality reduction on the list of image features using PCA
-    pca = PCA(n_components=128)
     reduced_features = pca.fit_transform(image_features)
     return reduced_features
+
+reduced_features = reduce_features(df_image)
+print("Model loaded!")
 
 # Define the query image and its features
 def get_image_features(image):
@@ -59,11 +65,10 @@ def get_image_features(image):
     
     return query_features[0]
 
-def get_closest_images(query_image, df_image, reduced_features, nb_closest=50):
+def get_closest_images(query_image, df_image, reduced_features, nb_closest):
     query_features = get_image_features(query_image)
     # reshape to 2 dim
     query_features = query_features.reshape(1, -1)
-    pca = PCA(n_components=128)
     query_features_reduced = pca.transform(query_features)
 
     # Compare the query features to the reduced features and return the most similar images
@@ -84,10 +89,8 @@ def get_closest_images(query_image, df_image, reduced_features, nb_closest=50):
 
     return most_similar_images
 
-def run(query_image):
-    df_image = pd.read_csv("static/data/features_densenet_test.csv")
-    reduced_features = reduce_features(df_image)
-    closest_images = get_closest_images(query_image, df_image, reduced_features)
+def run(query_image, nb_closest=50):
+    closest_images = get_closest_images(query_image, df_image, reduced_features, nb_closest)
     return closest_images
 
 

@@ -7,9 +7,12 @@ opencv-python-headless
 requests
 scikit-learn
 scipy
-tensorflow
-tensorflow-gpu
+torch
+torchvision
 flask
 flask_restful
 werkzeug
 wget
+tqdm
+pandas
+Pillow

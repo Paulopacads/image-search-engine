@@ -1,8 +1,10 @@
 import os
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 from flask_restful import Resource, Api, reqparse
 import werkzeug
 import binascii
+import CBIR_search as search_image
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -28,33 +30,37 @@ def favicon():
 #     dir, filename = os.path.split(filepath)
 #     return send_from_directory(os.path.join(app.root_path, "static", dir), filename, as_attachment=False)
 
-@app.route('/gallery')
+@app.route('/gallery', methods=['GET', 'POST'])
 def gallery():
-    parser = reqparse.RequestParser()
-
-    parser.add_argument('searchText', required=False, location='form')
-    parser.add_argument('searchFile', required=False, type=werkzeug.datastructures.FileStorage, location='files')
-    parser.add_argument('maxResults', required=False, location='parameter')
-    args = parser.parse_args()
-
-    print(args)
-
-    maxResults = 0 if args['maxResults'] is None else args[maxResults]
-
-    if (args['searchFile'] is not None):
-        image = args['searchFile']
+    if 'file' in request.files:
+        image = request.files['file']
+        print(image)
         image.save('tmp.jpg')
-    # TODO: Search for images
 
-    root_dir = 'static/data'
+    maxResults = 50
+    if 'maxRes' in request.form and request.form['maxRes'] != '':
+        maxResults = int(request.form['maxRes'])
+
+    text = None
+    if 'text' in request.form:
+        text = request.form['text']
+
+    cbir_images = None
+    if 'file' in request.files:
+        cbir_images = search_image.run('tmp.jpg', maxResults)
+
+    root_dir = 'static/data/jpg'
     images = []
-    for root, dirs, files in os.walk(root_dir):
-        print(root)
-        for file in files:
-            if any(file.endswith(ext) for ext in app.config['IMAGE_EXTS']):
-                images.append(os.path.join(root, file))
-                if (len(images) >= maxResults):
-                    return render_template('search.html', paths=images)
+    if cbir_images is None:
+        for root, dirs, files in os.walk(root_dir):
+            for file in files:
+                if any(file.endswith(ext) for ext in app.config['IMAGE_EXTS']):
+                    if (len(images) >= maxResults):
+                        return render_template('search.html', paths=images)
+                    images.append(os.path.join(root, file))
+    else:
+        for file in cbir_images:
+            images.append(os.path.join(root_dir, file))
     return render_template('search.html', paths=images)
 
 class HelloWorld(Resource):
